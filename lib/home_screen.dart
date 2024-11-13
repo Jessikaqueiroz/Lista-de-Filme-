@@ -68,6 +68,14 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Icon(Icons.delete, color: Colors.white),
             ),
             child: ListTile(
+              leading: filmes[index].imageUrl.isNotEmpty
+                    ? Image.network(
+                        filmes[index].imageUrl,
+                        width: 50,
+                        height: 50,
+                        fit: BoxFit.cover,
+                      )
+                    : Icon(Icons.movie),
               title: Text(filmes[index].titulo),
               subtitle: Text(filmes[index].genero),
               onTap: () => Navigator.of(context).push(
