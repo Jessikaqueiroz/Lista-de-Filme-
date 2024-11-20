@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/filme.dart';
 import 'package:flutter_application_1/detalhes_filme_page.dart';
 import 'package:flutter_application_1/cadastro_filme_page.dart';
+import 'package:flutter_application_1/database_helper.dart';
+
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -10,6 +12,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   List<Filme> filmes = [];
+  final DatabaseHelper _dbHelper = DatabaseHelper();
 
   // Função para adicionar filme
   void _addFilme(Filme filme) {

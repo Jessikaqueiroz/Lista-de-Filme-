@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_application_1/filme.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CadastroFilmePage extends StatefulWidget {
   final Function(Filme) onSubmit;
@@ -93,6 +94,18 @@ void _submitForm() {
                   return null;
                 },
                 onSaved: (value) => ano = int.parse(value!),
+              ),
+              // Campo para a duração (em minutos)
+              TextFormField(
+                decoration: InputDecoration(labelText: 'Duração (em minutos)'),
+                keyboardType: TextInputType.number,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Por favor, insira a duração do filme';
+                  }
+                  return null;
+                },
+                onSaved: (value) => duracao = int.parse(value!),
               ),
               RatingBar.builder(
                 minRating: 0,
