@@ -42,6 +42,55 @@ class _HomeScreenState extends State<HomeScreen> {
     await _dbHelper.deleteFilme(id);
   }
 
+  // Exibir o modal com opções
+  void _showOptionsModal(BuildContext context, Filme filme, int index) {
+    showModalBottomSheet(
+      context: context,
+      builder: (ctx) {
+        return Container(
+          padding: EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                leading: Icon(Icons.info, color: Colors.blue),
+                title: Text('Exibir Dados'),
+                onTap: () {
+                  Navigator.of(context).pop(); // Fecha o modal
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (ctx) => DetalhesFilmePage(filme: filme),
+                    ),
+                  );
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.edit, color: Colors.orange),
+                title: Text('Alterar'),
+                onTap: () {
+                  Navigator.of(context).pop(); // Fecha o modal
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (ctx) => CadastroFilmePage(
+                        filme: filme,
+                        onSubmit: (Filme updatedFilme) {
+                          setState(() {
+                            filmes[index] = updatedFilme;
+                          });
+                          _dbHelper.updateFilme(updatedFilme);
+                        },
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -129,40 +178,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   ],
                 ),
                 isThreeLine: true,
-                // Menu de opções para cada filme
-                trailing: PopupMenuButton<String>(
-                  onSelected: (value) {
-                    if (value == 'detalhes') {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (ctx) => DetalhesFilmePage(filme: filmes[index]),
-                        ),
-                      );
-                    } else if (value == 'alterar') {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (ctx) => CadastroFilmePage(
-                            onSubmit: (Filme updatedFilme) {
-                              setState(() {
-                                filmes[index] = updatedFilme;
-                              });
-                              _dbHelper.updateFilme(updatedFilme);
-                            },
-                          ),
-                        ),
-                      );
-                    }
+                // Modal de opções ao invés do PopupMenuButton
+                trailing: IconButton(
+                  icon: Icon(Icons.more_vert),
+                  onPressed: () {
+                    _showOptionsModal(context, filmes[index], index);
                   },
-                  itemBuilder: (ctx) => [
-                    PopupMenuItem(
-                      value: 'detalhes',
-                      child: Text('Exibir Dados'),
-                    ),
-                    PopupMenuItem(
-                      value: 'alterar',
-                      child: Text('Alterar'),
-                    ),
-                  ],
                 ),
               ),
             ),
