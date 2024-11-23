@@ -129,10 +129,40 @@ class _HomeScreenState extends State<HomeScreen> {
                   ],
                 ),
                 isThreeLine: true,
-                onTap: () => Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (ctx) => DetalhesFilmePage(filme: filmes[index]),
-                  ),
+                // Menu de opções para cada filme
+                trailing: PopupMenuButton<String>(
+                  onSelected: (value) {
+                    if (value == 'detalhes') {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (ctx) => DetalhesFilmePage(filme: filmes[index]),
+                        ),
+                      );
+                    } else if (value == 'alterar') {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (ctx) => CadastroFilmePage(
+                            onSubmit: (Filme updatedFilme) {
+                              setState(() {
+                                filmes[index] = updatedFilme;
+                              });
+                              _dbHelper.updateFilme(updatedFilme);
+                            },
+                          ),
+                        ),
+                      );
+                    }
+                  },
+                  itemBuilder: (ctx) => [
+                    PopupMenuItem(
+                      value: 'detalhes',
+                      child: Text('Exibir Dados'),
+                    ),
+                    PopupMenuItem(
+                      value: 'alterar',
+                      child: Text('Alterar'),
+                    ),
+                  ],
                 ),
               ),
             ),
